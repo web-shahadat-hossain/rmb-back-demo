@@ -1,0 +1,122 @@
+"use client";
+
+import Breadcrumb from "@/components/Breadcrumbs/Breadcrumb";
+import DefaultLayout from "@/components/Layouts/DefaultLayout";
+import { useState } from "react";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+const FormLayout = () => {
+  const [load, setLoad] = useState(false);
+  const onSubmitHandler = async (e: any) => {
+    e.preventDefault();
+    setLoad(true);
+    const data = new FormData(e.target);
+    const result = Object.fromEntries(data.entries());
+
+    try {
+      const response = await fetch(
+        "https://business-management-back-end.onrender.com/api/v1/buy",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            // Add any other headers if required
+          },
+          body: JSON.stringify(result),
+        },
+      );
+
+      const responseData = await response.json();
+
+      if (responseData.success) {
+        toast.success("Buy Success!!");
+        e.target.reset();
+        setLoad(false);
+      } else {
+        toast.success(responseData.message);
+        setLoad(false);
+      }
+    } catch (error) {
+      console.error("There was a problem with the fetch operation:", error);
+      setLoad(false);
+    }
+  };
+  return (
+    <DefaultLayout>
+      <Breadcrumb pageName="RMB BUY" />
+
+      <div className="grid grid-cols-1 gap-9 sm:grid-cols-2">
+        <div className="flex flex-col gap-9">
+          {/* <!-- Contact Form --> */}
+          <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
+            <div className="border-b border-stroke px-6.5 py-4 dark:border-strokedark">
+              <h3 className="font-medium text-black dark:text-white">
+                Buy Now
+              </h3>
+            </div>
+            <form onSubmit={onSubmitHandler}>
+              <div className="p-6.5">
+                <div className="mb-4.5">
+                  <label className="mb-3 block text-sm font-medium text-black dark:text-white">
+                    Full Name <span className="text-meta-1">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="Enter your Name"
+                    name="fullName"
+                    required
+                    className="w-full rounded border-[1.5px] border-stroke bg-transparent px-5 py-3 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
+                  />
+                </div>
+                <div className="mb-4.5">
+                  <label className="mb-3 block text-sm font-medium text-black dark:text-white">
+                    Buy Rate <span className="text-meta-1">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    placeholder="Enter your  Buy Rate"
+                    name="rate"
+                    className="w-full rounded border-[1.5px] border-stroke bg-transparent px-5 py-3 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
+                  />
+                </div>
+                <div className="mb-4.5">
+                  <label className="mb-3 block text-sm font-medium text-black dark:text-white">
+                    RMB <span className="text-meta-1">*</span>
+                  </label>
+                  <input
+                    type="number"
+                    required
+                    placeholder="Enter your RMB"
+                    name="rmb"
+                    className="w-full rounded border-[1.5px] border-stroke bg-transparent px-5 py-3 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
+                  />
+                </div>
+
+                {/* <SelectGroupOne /> */}
+
+                {load ? (
+                  <button
+                    type="button"
+                    className="flex w-full justify-center rounded bg-primary p-3 font-medium text-gray hover:bg-opacity-90"
+                    disabled
+                  >
+                    <svg className="mr-3 h-5 w-5 " viewBox="0 0 24 24"></svg>
+                    Please wait...
+                  </button>
+                ) : (
+                  <button className="flex w-full justify-center rounded bg-primary p-3 font-medium text-gray hover:bg-opacity-90">
+                    Submit Now
+                  </button>
+                )}
+              </div>
+            </form>
+          </div>
+        </div>
+        <ToastContainer />
+      </div>
+    </DefaultLayout>
+  );
+};
+
+export default FormLayout;
