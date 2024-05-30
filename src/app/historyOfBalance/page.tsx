@@ -1,8 +1,7 @@
 import Breadcrumb from "@/components/Breadcrumbs/Breadcrumb";
 import { Metadata } from "next";
 import DefaultLayout from "@/components/Layouts/DefaultLayout";
-
-import getBalanceHistory from "@/lib/getBalanceHistory";
+import getUserBalanceHistory from "@/lib/getUserBalance";
 
 export const metadata: Metadata = {
   title: "Sell Balance History",
@@ -10,7 +9,7 @@ export const metadata: Metadata = {
 };
 
 const TablesPage = async () => {
-  const balanceData = await getBalanceHistory();
+  const balanceData = await getUserBalanceHistory();
   const reversedBalanceData = balanceData?.data?.reverse() || [];
   return (
     <DefaultLayout>
