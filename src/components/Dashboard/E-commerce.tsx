@@ -197,7 +197,7 @@ const ECommerce: React.FC = async () => {
             alt="User"
           />
         </CardDataStats>
-        <CardDataStats
+        {/* <CardDataStats
           title="Abu Taher"
           total={`৳${userAmount?.data[1]?.balance?.toFixed(2)}`}
           rate="Balance"
@@ -212,7 +212,7 @@ const ECommerce: React.FC = async () => {
             height={55}
             alt="User"
           />
-        </CardDataStats>
+        </CardDataStats> */}
         <CardDataStats
           title="Total Sells"
           total={buyHistoryData?.data?.length}
