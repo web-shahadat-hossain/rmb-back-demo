@@ -1,6 +1,6 @@
 export default async function getUserBalanceHistory() {
   const result = await fetch(
-    "https://business-management-back-end.onrender.com/api/v1/create/balance",
+    "https://rmb-demo-back.onrender.com/api/v1/create/balance",
     {
       next: {
         revalidate: 10,
@@ -11,4 +11,4 @@ export default async function getUserBalanceHistory() {
   return result.json();
 }
 
-//  https://business-management-back-end.onrender.com
+//  https://rmb-demo-back.onrender.com

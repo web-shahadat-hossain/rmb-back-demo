@@ -25,7 +25,7 @@ const FormLayout = () => {
 
     try {
       const response = await fetch(
-        "https://business-management-back-end.onrender.com/api/v1/sell",
+        "https://rmb-demo-back.onrender.com/api/v1/sell",
         {
           method: "POST",
           headers: {
@@ -57,7 +57,7 @@ const FormLayout = () => {
     const fetchBuyHistoryData = async () => {
       try {
         const response = await fetch(
-          "https://business-management-back-end.onrender.com/api/v1/buy",
+          "https://rmb-demo-back.onrender.com/api/v1/buy",
         );
         if (!response.ok) {
           throw new Error("Failed to fetch buy history data");

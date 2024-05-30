@@ -1,6 +1,6 @@
 export default async function getProfit() {
   const result = await fetch(
-    "https://business-management-back-end.onrender.com/api/v1/main/profit",
+    "https://rmb-demo-back.onrender.com/api/v1/main/profit",
     {
       next: {
         revalidate: 10,

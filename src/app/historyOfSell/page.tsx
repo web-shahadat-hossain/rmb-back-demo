@@ -34,7 +34,7 @@ const TablesPage = () => {
     setLoad(true);
     try {
       const response = await fetch(
-        `https://business-management-back-end.onrender.com/api/v1/sell/${id}`,
+        `https://rmb-demo-back.onrender.com/api/v1/sell/${id}`,
         {
           method: "DELETE",
           headers: {

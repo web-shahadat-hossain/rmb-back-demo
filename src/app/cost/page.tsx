@@ -15,7 +15,7 @@ const FormLayout = () => {
 
     try {
       const response = await fetch(
-        "https://business-management-back-end.onrender.com/api/v1/cost",
+        "https://rmb-demo-back.onrender.com/api/v1/cost",
         {
           method: "POST",
           headers: {
