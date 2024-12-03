@@ -1,10 +1,8 @@
 import User from "@/lib/model";
-import { connectMongoDB } from "@/lib/mongoose";
 import NextAuth from "next-auth/next";
-import CredentialsProvider, {
-  CredentialsConfig,
-} from "next-auth/providers/credentials";
+import CredentialsProvider from "next-auth/providers/credentials";
 import { SessionStrategy } from "next-auth";
+import { connectMongoDB } from "@/lib/dbConnect";
 
 // Define your authOptions
 const authOptions = {

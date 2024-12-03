@@ -1,57 +1,14 @@
-import React from "react";
 import CardDataStats from "../CardDataStats";
-import getMainBalance from "@/lib/getMainBalance";
-import getRMB from "@/lib/getRMB";
-import getProfit from "@/lib/getProfit";
 import TableThree from "../Tables/TableThree";
-import getSellHistory from "@/lib/getSellHistory";
-import getUserBalanceHistory from "@/lib/getUserBalance";
 import Image from "next/image";
 
-const ECommerce: React.FC = async () => {
-  const mainBalance = getMainBalance();
-  const mainRMB = getRMB();
-  const mainProfit = getProfit();
-  const userBalance = getUserBalanceHistory();
-  const [balance, rmb, profit, userAmount] = await Promise.all([
-    mainBalance,
-    mainRMB,
-    mainProfit,
-    userBalance,
-  ]);
-  const mainAmount: any = balance?.data[0]?.mainBalance.toFixed(2);
-  const RMBBalance: any = rmb?.data[0]?.rmb.toFixed(2);
-  const profitAmount: any = profit?.data[0]?.amount.toFixed(2);
-  const buyHistoryData = await getSellHistory();
-  const today = new Date();
-  const formattedToday = `${today.getMonth() + 1}/${today.getDate()}`;
-  const todaySellData = buyHistoryData?.data?.filter((data: any) => {
-    const date = new Date(data.createdAt);
-    const formattedDate = `${date.getMonth() + 1}/${date.getDate()}`;
-    return formattedDate === formattedToday;
-  });
-  const totalProfitToday = todaySellData.reduce(
-    (acc: any, curr: any) => acc + parseFloat(curr.profit),
-    0,
-  );
-  const currentMonth = new Date().getMonth() + 1; // Months are zero-indexed in JavaScript
-
-  const monthlySellData = buyHistoryData?.data?.filter((data: any) => {
-    const date = new Date(data.createdAt);
-    return date.getMonth() + 1 === currentMonth;
-  });
-
-  const totalProfitMonth = monthlySellData.reduce(
-    (acc: any, curr: any) => acc + parseFloat(curr.profit || 0),
-    0,
-  );
-
+const ECommerce = ({ userData, transactionsData }: any) => {
   return (
     <>
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6 xl:grid-cols-4 2xl:gap-7.5">
         <CardDataStats
-          title="Total RMB Stock"
-          total={`¥${RMBBalance}`}
+          title="Total Balance"
+          total={`৳${userData[0]?.balance?.toFixed(2)}`}
           rate="0.43%"
           levelUp
         >
@@ -73,7 +30,7 @@ const ECommerce: React.FC = async () => {
             />
           </svg>
         </CardDataStats>
-        <CardDataStats
+        {/* <CardDataStats
           title={`Today Profit`}
           total={`৳${totalProfitToday?.toFixed(2)}`}
           rate="4.35%"
@@ -100,8 +57,8 @@ const ECommerce: React.FC = async () => {
               fill=""
             />
           </svg>
-        </CardDataStats>
-        <CardDataStats
+        </CardDataStats> */}
+        {/* <CardDataStats
           title={`Monthly Profit`}
           total={`৳${totalProfitMonth?.toFixed(2)}`}
           rate="4.35%"
@@ -128,8 +85,8 @@ const ECommerce: React.FC = async () => {
               fill=""
             />
           </svg>
-        </CardDataStats>
-        <CardDataStats
+        </CardDataStats> */}
+        {/* <CardDataStats
           title="Total Profit"
           total={`৳${profitAmount}`}
           rate="4.35%"
@@ -156,8 +113,8 @@ const ECommerce: React.FC = async () => {
               fill=""
             />
           </svg>
-        </CardDataStats>
-        <CardDataStats
+        </CardDataStats> */}
+        {/* <CardDataStats
           title="Total Balance"
           total={`৳${mainAmount}`}
           rate="2.59%"
@@ -180,17 +137,17 @@ const ECommerce: React.FC = async () => {
               fill=""
             />
           </svg>
-        </CardDataStats>
+        </CardDataStats> */}
         <CardDataStats
-          title="Md Dalim"
-          total={`৳${userAmount?.data[0]?.balance?.toFixed(2)}`}
+          title="Sergio"
+          total={`৳${userData[1]?.balance?.toFixed(2)}`}
           rate="Balance"
           levelDown
         >
           <Image
             className="rounded-full"
             src={
-              "https://res.cloudinary.com/dpcxwe6gm/image/upload/v1714322378/377849308_306113372067415_2244416347661932831_n_zwhcfb.jpg"
+              "https://res.cloudinary.com/dpcxwe6gm/image/upload/v1733239042/dj2hfmsgmt2yahhiclku.jpg"
             }
             width={55}
             height={55}
@@ -213,7 +170,7 @@ const ECommerce: React.FC = async () => {
             alt="User"
           />
         </CardDataStats> */}
-        <CardDataStats
+        {/* <CardDataStats
           title="Total Sells"
           total={buyHistoryData?.data?.length}
           rate="0.95%"
@@ -240,12 +197,12 @@ const ECommerce: React.FC = async () => {
               fill=""
             />
           </svg>
-        </CardDataStats>
+        </CardDataStats> */}
       </div>
 
       <div className="mt-4 grid grid-cols-12 gap-4 md:mt-6 md:gap-6 2xl:mt-7.5 2xl:gap-7.5">
         <div className="col-span-12 xl:col-span-8">
-          <TableThree />
+          <TableThree transactionsData={transactionsData} />
         </div>
       </div>
     </>

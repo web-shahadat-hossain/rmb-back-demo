@@ -1,78 +1,124 @@
-import getSellHistory from "@/lib/getSellHistory";
+import {
+  Key,
+  ReactElement,
+  JSXElementConstructor,
+  ReactNode,
+  ReactPortal,
+  PromiseLikeOfReactNode,
+} from "react";
 
-const TableThree = async () => {
-  const buyHistoryData = await getSellHistory();
-  const reversedSellHistoryData =
-    buyHistoryData?.data?.reverse().slice(0, 10) || [];
+interface Transaction {
+  _id: string;
+  user_id: string;
+  amount: number;
+  type: string;
+  date: string;
+  purpose?: string;
+  profit?: number;
+  commission?: number;
+}
 
+export default async function AllTransactionsList({ transactionsData }: any) {
+  const transactions = transactionsData ? transactionsData?.slice(0, 10) : [];
   return (
-    <div className="rounded-sm border border-stroke bg-white px-5 pb-2.5 pt-6 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-4.5 xl:pb-1">
-      <h4 className="mb-6 text-xl font-semibold text-black dark:text-white">
-        Sell History
-      </h4>
-
-      <div className="rounded-sm border border-stroke bg-white px-5 pb-2.5 pt-6 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-2.5 xl:pb-1">
-        <div className="max-w-full overflow-x-auto">
-          <table className="w-full table-auto">
-            <thead>
-              <tr className="bg-gray-2 text-left dark:bg-meta-4">
-                <th className="min-w-[220px] px-4 py-4 font-medium text-black dark:text-white xl:pl-11">
-                  Name
-                </th>
-                <th className="min-w-[150px] px-4 py-4 font-medium text-black dark:text-white">
-                  Buy Rate
-                </th>
-                <th className="min-w-[150px] px-4 py-4 font-medium text-black dark:text-white">
-                  Sell Rate
-                </th>
-                <th className="min-w-[150px] px-4 py-4 font-medium text-black dark:text-white">
-                  RMB
-                </th>
-                <th className="min-w-[120px] px-4 py-4 font-medium text-black dark:text-white">
-                  Invoice date
-                </th>
-                <th className="min-w-[120px] px-4 py-4 font-medium text-black dark:text-white">
-                  Profit
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {reversedSellHistoryData?.map((data: any, key: number) => (
-                <tr key={key}>
-                  <td className="border-b border-[#eee] px-4 py-5 pl-9 dark:border-strokedark xl:pl-11">
-                    <h5 className="font-medium text-black dark:text-white">
-                      {data.fullName}
-                    </h5>
+    <div className="p-4">
+      <h1 className="mb-4 text-2xl font-bold">All Transactions History</h1>
+      <div className="rounded border border-stroke bg-white px-5 pb-2.5 pt-6 shadow-default dark:border-strokedark dark:bg-boxdark">
+        <table className="w-full table-auto">
+          <thead>
+            <tr className="bg-gray-2 text-left dark:bg-meta-4">
+              <th className="px-4 py-4 font-medium text-black dark:text-white">
+                User ID
+              </th>
+              <th className="px-4 py-4 font-medium text-black dark:text-white">
+                Type
+              </th>
+              <th className="px-4 py-4 font-medium text-black dark:text-white">
+                Amount
+              </th>
+              <th className="px-4 py-4 font-medium text-black dark:text-white">
+                Profit
+              </th>
+              <th className="px-4 py-4 font-medium text-black dark:text-white">
+                Commission
+              </th>
+              <th className="px-4 py-4 font-medium text-black dark:text-white">
+                Date
+              </th>
+              <th className="px-4 py-4 font-medium text-black dark:text-white">
+                Purpose
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {transactions?.map(
+              (transaction: {
+                _id: Key | null | undefined;
+                user_id:
+                  | string
+                  | number
+                  | boolean
+                  | ReactElement<any, string | JSXElementConstructor<any>>
+                  | Iterable<ReactNode>
+                  | ReactPortal
+                  | PromiseLikeOfReactNode
+                  | null
+                  | undefined;
+                type:
+                  | string
+                  | number
+                  | boolean
+                  | ReactElement<any, string | JSXElementConstructor<any>>
+                  | Iterable<ReactNode>
+                  | ReactPortal
+                  | PromiseLikeOfReactNode
+                  | null
+                  | undefined;
+                amount: number;
+                profit: number;
+                commission: number;
+                date: string | number | Date;
+                purpose: any;
+              }) => (
+                <tr key={transaction._id}>
+                  <td className="border-b border-[#eee] px-4 py-5 dark:border-strokedark">
+                    {transaction.user_id}
                   </td>
                   <td className="border-b border-[#eee] px-4 py-5 dark:border-strokedark">
-                    <p className="text-black dark:text-white">{data.buyRate}</p>
+                    {transaction.type}
                   </td>
                   <td className="border-b border-[#eee] px-4 py-5 dark:border-strokedark">
-                    <p className="text-black dark:text-white">
-                      {data.sellRate}
-                    </p>
+                    ৳{transaction.amount.toFixed(2)}
                   </td>
                   <td className="border-b border-[#eee] px-4 py-5 dark:border-strokedark">
-                    <p className="text-black dark:text-white">{data.rmb}</p>
+                    ৳
+                    {transaction?.profit
+                      ? transaction?.profit?.toFixed(2)
+                      : "N/A"}
                   </td>
                   <td className="border-b border-[#eee] px-4 py-5 dark:border-strokedark">
-                    <p className="text-black dark:text-white">
-                      {new Date(data.createdAt).toLocaleDateString()}
-                    </p>
+                    ৳
+                    {transaction.commission
+                      ? transaction.commission.toFixed(2)
+                      : "N/A"}
                   </td>
                   <td className="border-b border-[#eee] px-4 py-5 dark:border-strokedark">
-                    <p className=" text-blue-700 dark:text-white">
-                      {data?.profit.toFixed(2)}
-                    </p>
+                    {new Date(transaction.date).toLocaleDateString()}
+                  </td>
+                  <td className="border-b border-[#eee] px-4 py-5 dark:border-strokedark">
+                    {transaction.purpose || "N/A"}
                   </td>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+              ),
+            )}
+          </tbody>
+        </table>
+        {transactions.length === 0 && (
+          <p className="text-gray-500 py-4 text-center">
+            No transactions found.
+          </p>
+        )}
       </div>
     </div>
   );
-};
-
-export default TableThree;
+}

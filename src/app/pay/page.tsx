@@ -1,46 +1,51 @@
 "use client";
 import Breadcrumb from "@/components/Breadcrumbs/Breadcrumb";
 import DefaultLayout from "@/components/Layouts/DefaultLayout";
-import { useState } from "react";
+import { useState, ChangeEvent, FormEvent } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import axios from "axios"; // Import axios
+
+// Defining type for the response message
+interface ApiResponse {
+  message: string;
+}
 
 const FormLayout = () => {
-  const [load, setLoad] = useState(false);
-  const onSubmitHandler = async (e: any) => {
+  const [load, setLoad] = useState<boolean>(false);
+  const [userId, setUserId] = useState<string>("674df9ef742349973b23a630");
+  const [amount, setAmount] = useState<string>("");
+  const [message, setMessage] = useState<string>("");
+
+  // Handler for form submission
+  const handlePayCommission = async (e: FormEvent) => {
     e.preventDefault();
     setLoad(true);
-    const data = new FormData(e.target);
-    const result = Object.fromEntries(data.entries());
 
     try {
-      const response = await fetch(
-        "https://rmb-demo-back.onrender.com/api/v1/cost",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            // Add any other headers if required
-          },
-          body: JSON.stringify(result),
-        },
-      );
+      // Making the API call using axios
+      const response = await axios.post<ApiResponse>("/api/pay-commission", {
+        userId,
+        amount,
+      });
 
-      const responseData = await response.json();
-
-      if (responseData.success) {
-        toast.success("Cost Success!!");
-        setLoad(false);
-        e.target.reset();
-      } else {
-        toast.success(responseData.message);
-        setLoad(false);
-      }
-    } catch (error) {
-      console.error("There was a problem with the fetch operation:", error);
+      setMessage(response.data.message); // Set success message
+      toast.success("Balance added successfully!");
+      setLoad(false);
+    } catch (error: any) {
+      console.error("There was a problem with the API request:", error);
+      setMessage(error.response?.data?.message || "An error occurred");
       setLoad(false);
     }
   };
+
+  // Handler for updating user ID
+
+  // Handler for updating amount
+  const handleAmountChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setAmount(e.target.value);
+  };
+
   return (
     <DefaultLayout>
       <Breadcrumb pageName="Balance" />
@@ -54,58 +59,48 @@ const FormLayout = () => {
                 Add Balance
               </h3>
             </div>
-            <form onSubmit={onSubmitHandler}>
+            <form onSubmit={handlePayCommission}>
               <div className="p-6.5">
-                <div className="mb-4.5">
-                  <label className="mb-3 block text-sm font-medium text-black dark:text-white">
-                    Select User Name
-                  </label>
-                  <select
-                    name="userName"
-                    className="w-full rounded border-[1.5px] border-stroke bg-transparent px-5 py-3 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
-                  >
-                    <option value="Dalim24">Md Dalim </option>
-                    <option value="Taher24">Abu Taher</option>
-                  </select>
-                </div>
-                <div className="mb-4.5">
+                {/* <div className="mb-4.5">
                   <label className="mb-3 block text-sm font-medium text-black dark:text-white">
                     Full Name <span className="text-meta-1">*</span>
                   </label>
                   <input
                     type="text"
-                    required
                     placeholder="Enter your Name"
                     name="fullName"
+                    value={userId}
+                    onChange={handleUserIdChange}
                     className="w-full rounded border-[1.5px] border-stroke bg-transparent px-5 py-3 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
+                    required
                   />
-                </div>
+                </div> */}
 
                 <div className="mb-4.5">
                   <label className="mb-3 block text-sm font-medium text-black dark:text-white">
-                    Cost Amount <span className="text-meta-1">*</span>
+                    Balance <span className="text-meta-1">*</span>
                   </label>
                   <input
-                    type="text"
-                    required
+                    type="number"
                     placeholder="Enter your Amount"
-                    name="costAmount"
+                    name="mainBalance"
+                    value={amount}
+                    onChange={handleAmountChange}
                     className="w-full rounded border-[1.5px] border-stroke bg-transparent px-5 py-3 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
+                    required
                   />
                 </div>
-                <div className="mb-6">
+                {/* <div className="mb-6">
                   <label className="mb-3 block text-sm font-medium text-black dark:text-white">
                     Message <span className="text-meta-1">*</span>
                   </label>
                   <textarea
-                    required
                     name="message"
                     rows={6}
                     placeholder="Type your message"
                     className="w-full rounded border-[1.5px] border-stroke bg-transparent px-5 py-3 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
                   ></textarea>
-                </div>
-                {/* <SelectGroupOne /> */}
+                </div> */}
 
                 {load ? (
                   <button
@@ -113,7 +108,6 @@ const FormLayout = () => {
                     className="flex w-full justify-center rounded bg-primary p-3 font-medium text-gray hover:bg-opacity-90"
                     disabled
                   >
-                    <svg className="mr-3 h-5 w-5 " viewBox="0 0 24 24"></svg>
                     Please wait...
                   </button>
                 ) : (
@@ -123,10 +117,12 @@ const FormLayout = () => {
                 )}
               </div>
             </form>
+            {message && <p className="mt-4 text-green-500">{message}</p>}
           </div>
         </div>
-        <ToastContainer />
       </div>
+
+      <ToastContainer />
     </DefaultLayout>
   );
 };
